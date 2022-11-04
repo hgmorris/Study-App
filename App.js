@@ -1,11 +1,13 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, TextInput, Button, Alert} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, Alert} from 'react-native';
 import  Navigation from './components/Navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './screens/OnboardingScreen';
 import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { createKeyboardAwareNavigator } from 'react-navigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { asin } from 'react-native-reanimated';
 
 
 
@@ -19,9 +21,21 @@ const App = () =>{
   const[homeTodayScore,setHomeTodayScore] = React.useState(0);
   //edit in the line
 const [tempoCode, sentTempCode] = React.useState(null);
+
+useEffect(()=>{
+  const getSesionToken = async() => {
+    const sessionToken = await AsyncStorage.getItem('sessionToken',);
+    console.log('token from storage', sessionToken);
+    const validateResponse = await fetch('https://dev.stedi.me/validate/'+sessionToken);
+    if(validateResponse.status == 200){
+      const userEmail = await validateResponse.text();
+      console.log(userEmail)
+   }
+   getSessionToken();
+ },[])
 if (isFirstLaunch == true){
   
-return(
+ return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
  
 );
@@ -45,7 +59,7 @@ return(
       onPress={async()=>{
         console.log(phoneNumber +'Button was pressed')
         await fetch(
-          'https://dev.stedi.me/twofactorlogin/8013862433',
+          'https://dev.stedi.me/twofactorlogin/'+phoneNumber,
           {
             method: 'POST',
             headers:{
@@ -67,7 +81,7 @@ return(
       style={styles.button}
       onPress={async()=>{
         console.log('Button 2 was pressed')
-        await fetch(
+        loginResponse = await fetch(
           'https://dev.stedi.me/twofactorlogin',
           {
             method: 'POST',
@@ -84,8 +98,11 @@ return(
 
         if(loginResponse.status == 200){
           const sessionToken = await loginResponse.text();
-          console.log('Session Token', sessionToken)
-          setIsLoggedIn(true)
+          await AsyncStorage.setItem( 'sessionToken', sessionToken)
+          console.log('Session Token', sessionToken);
+        
+          
+          setIsLoggedIn(true);
         
           }
 
@@ -93,7 +110,7 @@ return(
 
 
       }}}
-      />
+      ></Button>
       </View>
 )// send edit here
 
