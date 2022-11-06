@@ -19,27 +19,28 @@ const App = () =>{
   const [phoneNumber,setPhoneNumber] = React.useState ("")
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const[homeTodayScore,setHomeTodayScore] = React.useState(0);
-  //edit in the line
 const [tempoCode, sentTempCode] = React.useState(null);
 
 useEffect(()=>{
   const getSesionToken = async() => {
-    const sessionToken = await AsyncStorage.getItem('sessionToken',);
+    const sessionToken = await AsyncStorage.getItem('sessionToken');
     console.log('token from storage', sessionToken);
     const validateResponse = await fetch('https://dev.stedi.me/validate/'+sessionToken);
+    
     if(validateResponse.status == 200){
       const userEmail = await validateResponse.text();
-      console.log(userEmail)
-   }
+      console.log('userEmail', userEmail);
+      setIsLoggedIn(true);
+    }
+  }
    getSessionToken();
  },[])
-if (isFirstLaunch == true){
-  
+if(isFirstLaunch == true&&! isFirstLaunch){
  return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
  
 );
-  }else if(isLoggedIn){ //start here
+  }else if(isLoggedIn){ 
     return <Navigation/>
   }
    else {
@@ -51,7 +52,7 @@ if (isFirstLaunch == true){
        onChangeText={setPhoneNumber}
        style={styles.input}
        placeholderTextColor= '#4251f5'
-       placeholder='Cell phone'>
+       placeholder='Cell Phone'>
       </TextInput>
       <Button
       title='Send'
@@ -61,12 +62,13 @@ if (isFirstLaunch == true){
         await fetch(
           'https://dev.stedi.me/twofactorlogin/'+phoneNumber,
           {
+            
             method: 'POST',
             headers:{
             "content-type":'application/text'
             }
-          })
-
+          }
+        )
       }}
       />
       <TextInput
@@ -98,22 +100,20 @@ if (isFirstLaunch == true){
 
         if(loginResponse.status == 200){
           const sessionToken = await loginResponse.text();
-          await AsyncStorage.setItem( 'sessionToken', sessionToken)
-          console.log('Session Token', sessionToken);
+          await AsyncStorage.setItem('sessionToken', sessionToken)
+          console.log('session token', sessionToken);
         
-          
           setIsLoggedIn(true);
-        
-          }
+          
+        }
 
         else{
 
-
-      }}}
-      ></Button>
+        }
+      }}
+      />
       </View>
-)// send edit here
-
+ )
 }
 }
 export default App;
@@ -125,21 +125,21 @@ const styles = StyleSheet.create({
       justifyContent: 'center'
   },
   input: {
-    marginTop: 100,
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    marginTop: 200,
   },
   input2: {
-    marginTop: 100,
+    marginTop: 300,
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
   },
   margin:{
-    marginTop:100 //add manually
+    marginTop:100,
   },
   button: {
     alignItems: "center",
@@ -147,5 +147,4 @@ const styles = StyleSheet.create({
     padding: 10
   }    
 })
-
 
