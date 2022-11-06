@@ -4,31 +4,30 @@ import {FontAwesome5} from '@expo/vector-icons';
 import quotes from '../data/quote.json';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import { LineChart} from 'react-native-chart-kit';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = (props) => {
   const token = useRef("");
   const [score, setScore] = useState(0);
   useEffect(()=>{ todayScore();},[]);
 
-//today score
+  //today score
 const todayScore = async() =>{
   let scoreObject ={};
   try{
-    const tokenResponse = await fetch('https://dev.stedi.me/login',{
-  method: 'POST',
-  body:JSON.stringify({
-    userName: "rom19010@byui.edu",
-    password:"Patricia2596@"
-  })
-});
-
- token.current = await tokenResponse.text();
-    const scoreResponse = await fetch('https://dev.stedi.me/riskscore/rom19010@byui.edu',{
+//  const tokenResponse = await fetch('https://dev.stedi.me/login',{
+//  method: 'POST',
+//  body:JSON.stringify({
+//   userName: "rom19010@byui.edu",
+//    password:"Patricia2596@"
+//  })
+//});
+const userEmail = await AsyncStorage.getItem('userEmail');
+ token.current = await AsyncStorage.getItem('sessionToken');
+    const scoreResponse = await fetch('https://dev.stedi.me/riskscore/', + userEmail,{
     method:'GET',
     headers:{
-      'Content-Type': 'application/json',
+      'Content-Type':'application/json',
      'suresteps.session.token': token.current
     }
   })
@@ -46,8 +45,8 @@ const todayScore = async() =>{
 //monthly average time
 
 // color
-let backgroundColors = ['#0c5d8f', '#e7a740', '#e63653', '#6554a3', '#6bcad0', '#e17f93', '#fee227'];
-let colors = ['#b4cfec', '#f7dcb0', '#fa96a6', '#b0a0eb', '#adecf0','#ffe6ee','#fcf4a3'];
+let backgroundColors = ['#0C5D8F', '#E7A740', '#E63653', '#6554A3', '#6BCAD0', '#E17F93', '#FEE227'];
+let colors = ['#B4CFEC', '#F7DCB0', '#FA96A6', '#B0A0EB', '#ADECF0','#FFE6EE','#FCF4A3'];
 
 var day =new Date();
 
@@ -153,4 +152,3 @@ const styles = StyleSheet.create({
 
   }
 });
-
