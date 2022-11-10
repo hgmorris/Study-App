@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, Alert} from 'react-native';
 import  Navigation from './components/Navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -22,7 +22,7 @@ const App = () =>{
 const [tempoCode, sentTempCode] = React.useState(null);
 
 useEffect(()=>{
-  const getSesionToken = async() => {
+  const getSessionToken = async() => {
     const sessionToken = await AsyncStorage.getItem('sessionToken');
     console.log('token from storage', sessionToken);
     const validateResponse = await fetch('https://dev.stedi.me/validate/'+sessionToken);
@@ -34,16 +34,16 @@ useEffect(()=>{
     }
   }
    getSessionToken();
+
  },[])
 if(isFirstLaunch == true&&! isFirstLaunch){
  return(
   <OnboardingScreen setFirstLaunch={setFirstLaunch}/>
- 
 );
   }else if(isLoggedIn){ 
     return <Navigation/>
   }
-   else {
+  else {
  return(
      <View> 
       
@@ -59,7 +59,7 @@ if(isFirstLaunch == true&&! isFirstLaunch){
       style={styles.button}
       onPress={async()=>{
         console.log(phoneNumber +'Button was pressed')
-        await fetch(
+        const sendTextResponse = await fetch(
           'https://dev.stedi.me/twofactorlogin/'+phoneNumber,
           {
             
@@ -69,7 +69,11 @@ if(isFirstLaunch == true&&! isFirstLaunch){
             }
           }
         )
-      }}
+        if (sendTextReponse.status!=200){
+          console.log('server send response: '+sendTextResponse.status);
+          Alert('Communication Error','Server respond to send text with status: '+setTextResponse.status);
+        }
+        }}
       />
       <TextInput
        value={tempoCode}
@@ -98,18 +102,19 @@ if(isFirstLaunch == true&&! isFirstLaunch){
         )
         console.log(loginResponse.status)
 
-        if(loginResponse.status == 200){
+        if(loginResponse.status == 200){//200 means the password was valid
           const sessionToken = await loginResponse.text();
-          await AsyncStorage.setItem('sessionToken', sessionToken)
+          await AsyncStorage.setItem('sessionToken', sessionToken);
           console.log('session token', sessionToken);
         
           setIsLoggedIn(true);
           
         }
 
-        else{
-
-        }
+       else{
+          console.log('response status', loginResponse.status);
+        }Alert.alert('Invalid', 'Login information')
+        setIsLoggedIn(false);
       }}
       />
       </View>
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     marginTop: 200,
   },
   input2: {
-    marginTop: 300,
+    marginTop: 10,
     height: 40,
     margin: 12,
     borderWidth: 1,

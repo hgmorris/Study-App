@@ -3,8 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button} from 'react-native';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import BarChart from 'react-native-bar-chart';
+import{ camera} from 'expo-camera';
 // import Share from 'react-native-share';
-
+import Profile from './Profile';
+const Home = (props) => {
+  const token = useRef("");
+  const (cameraPermission, setcamerapermission = useState(false)
+  cost (ProfilePhoto, setprofilePhoto) =n useState(null);
+  cost cameraRef = useRef(null);
 
 
 // const data = [
