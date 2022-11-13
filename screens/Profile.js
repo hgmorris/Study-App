@@ -4,14 +4,12 @@ import { StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import BarChart from 'react-native-bar-chart';
 import{ camera} from 'expo-camera';
-// import Share from 'react-native-share';
 import Profile from './Profile';
 const Home = (props) => {
   const token = useRef("");
-  const (cameraPermission, setcamerapermission = useState(false)
-  cost (ProfilePhoto, setprofilePhoto) =n useState(null);
-  cost cameraRef = useRef(null);
-
+  const cameraPermission, setcamerapermission = useState(false)
+  cost (ProfilePhoto, setprofilePhoto) = useState(null);
+  cost(cameraRef = useRef(null)
 
 // const data = [
 //   [70, 0],
@@ -21,7 +19,6 @@ const Home = (props) => {
 //   [280, 0],
 //   [80,0 ],
 //   [110, 0]
-
 // ];
 // labels
 // const horizontalData = ['S', 'M', 'T', 'W', 'T', 'F','S'];
