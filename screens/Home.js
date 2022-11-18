@@ -10,9 +10,6 @@ import Profile from './Profile';
 
 const Home = (props) => {
   const token = useRef("");
-  const (cameraPermission, setcamerapermission = useState(false)
-  cost (ProfilePhoto, setprofilePhoto) =n useState(null);
-  cost cameraRef = useRef(null);
   const [score, setScore] = useState(0);
   useEffect(()=>{ todayScore();},[]);
 
