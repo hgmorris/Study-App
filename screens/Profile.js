@@ -23,7 +23,7 @@ const getUserName = async ()=>{
   const cameraPermission = await Camera.requestCameraPermissionsAsync();
   console.log('Camera permission', cameraPermission);
   setCameraPermission(cameraPermission);
-  const userName = await AsyncStorage.getItem('userName');
+  const userName = await AsyncStorage.getItem('userEmail');
   console.log('Profile userName' , userName);
   setUserName(userName);
   const profilePhoto = await AsyncStorage.getItem('profilePhoto')
