@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import BarChart from 'react-native-bar-chart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 
 const cameraOptions={
 quality:0,
@@ -26,6 +26,7 @@ const getUserName = async ()=>{
   const userName = await AsyncStorage.getItem('userEmail');
   console.log('Profile userName' , userName);
   setUserName(userName);
+  await AsyncStorage.removeItem("profilePhoto")
   const profilePhoto = await AsyncStorage.getItem('profilePhoto')
   setProfilePhoto(profilePhoto);
 };
@@ -52,7 +53,7 @@ getUserName();
 if (profilePhoto==null){
     return (
       <View style={styles.container}>
-      <Camera style={styles.camera} ref={cameraRef} onCameraReady={()=>{setCameraReady(true)}}>
+    <Camera type={CameraType.front} style={styles.camera} ref={cameraRef} onCameraReady={()=>{setCameraReady(true)}}>
         <View style={styles.buttonContainer}>
           {cameraReady?<TouchableOpacity style={styles.button} onPress={async()=> {
 
